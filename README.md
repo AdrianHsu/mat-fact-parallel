@@ -8,4 +8,4 @@
 
 ## References
 
-![pedrorio/parallel_and_distributed_computing](https://github.com/pedrorio/parallel_and_distributed_computing)
+[pedrorio/parallel_and_distributed_computing](https://github.com/pedrorio/parallel_and_distributed_computing)

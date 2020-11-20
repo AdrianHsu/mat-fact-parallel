@@ -1,4 +1,5 @@
-#include <omp.h>
+//#include <omp.h>
+#include "/usr/local/opt/libomp/include/omp.h"
 #include "readInput.h"
 #include "initialLR.h"
 #include "updateLR.h"
