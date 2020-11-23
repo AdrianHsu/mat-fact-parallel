@@ -1,4 +1,4 @@
-#include "updateLR.h"
+#include "updateLR.cuh"
 
 __global__ void updateLR(double *&A,
               double *&prediction, double *&delta,
@@ -65,7 +65,12 @@ __global__ void updateLR(double *&A,
     //         R[k * numberOfItems + nonZeroItemIndexes[l]] += convergenceCoefficient * (2 * delta[l] * StoreL[nonZeroUserIndexes[l] * numberOfFeatures + k]);
     //     }
     // }
-    
-    L[nonZeroUserIndexes[l] * numberOfFeatures + k] += convergenceCoefficient * (2 * delta[l] * StoreR[k * numberOfItems + nonZeroItemIndexes[l]]);
-    R[k * numberOfItems + nonZeroItemIndexes[l]] += convergenceCoefficient * (2 * delta[l] * StoreL[nonZeroUserIndexes[l] * numberOfFeatures + k]);
+
+    double gradientL = convergenceCoefficient * (2 * delta[l] * R[k * numberOfItems + nonZeroItemIndexes[l]]);
+    double gradientR = convergenceCoefficient * (2 * delta[l] * L[nonZeroUserIndexes[l] * numberOfFeatures + k]);
+
+    __syncthreads();
+
+    L[nonZeroUserIndexes[l] * numberOfFeatures + k] += gradientL;
+    R[k * numberOfItems + nonZeroItemIndexes[l]] += gradientR;
 };
