@@ -1,5 +1,5 @@
-#ifndef SERIAL_UPDATELR_H
-#define SERIAL_UPDATELR_H
+#ifndef CUDA_UPDATELR_H
+#define CUDA_UPDATELR_H
 
 __global__ void updateLR(double *A,
               double *prediction, double *delta,
@@ -10,4 +10,4 @@ __global__ void updateLR(double *A,
               int *numberOfNonZeroElements,
               double *convergenceCoefficient);
 
-#endif //SERIAL_UPDATELR_H
+#endif //CUDA_UPDATELR_H

@@ -1,5 +1,5 @@
-#ifndef SERIAL_FILTERFINALMATRIX_H
-#define SERIAL_FILTERFINALMATRIX_H
+#ifndef CUDA_FILTERFINALMATRIX_H
+#define CUDA_FILTERFINALMATRIX_H
 
 void filterFinalMatrix(double *&A, double *&B,
                        int *&nonZeroUserIndexes,
@@ -12,4 +12,4 @@ void filterFinalMatrix(double *&A, double *&B,
                        int *&BV);
 
 
-#endif //SERIAL_FILTERFINALMATRIX_H
+#endif //CUDA_FILTERFINALMATRIX_H

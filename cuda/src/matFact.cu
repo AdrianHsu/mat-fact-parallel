@@ -15,14 +15,19 @@ void matFact(std::string inputFileName) {
 
     start_time = omp_get_wtime();
 
-    auto *A = new double[0];
-    auto *nonZeroUserIndexes = new int[0];
-    auto *nonZeroItemIndexes = new int[0];
-    auto *nonZeroElements = new double[0];
+    double *A = new double[0];
+    int *nonZeroUserIndexes = new int[0];
+    int *nonZeroItemIndexes = new int[0];
+    double *nonZeroElements = new double[0];
 
-    int k, numberOfIterations, numberOfFeatures, numberOfUsers, numberOfItems, numberOfNonZeroElements;
+    int numberOfIterations, numberOfFeatures, numberOfUsers, numberOfItems, numberOfNonZeroElements;
     double convergenceCoefficient;
+    
 
+    int *nonZeroUserIndexes_, *nonZeroItemIndexes_;
+    int *numberOfFeatures_, *numberOfUsers_, *numberOfItems_, *numberOfNonZeroElements_;
+    double *convergenceCoefficient_; 
+    double *A_, *L_, *R_, *prediction_, *delta_;
 
     readInput(inputFileName, A, nonZeroUserIndexes, nonZeroItemIndexes, nonZeroElements,
               numberOfIterations, numberOfFeatures, convergenceCoefficient,
@@ -66,17 +71,15 @@ void matFact(std::string inputFileName) {
     // Copy data to GPU
     cudaMemcpy(nonZeroUserIndexes_, nonZeroUserIndexes, numberOfNonZeroElements * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(nonZeroItemIndexes_, nonZeroItemIndexes, numberOfNonZeroElements * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(numberOfUsers_, numberOfUsers, sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(numberOfItems_, numberOfItems, sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(numberOfFeatures_, numberOfFeatures, sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(numberOfNonZeroElements_, numberOfNonZeroElements, sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(convergenceCoefficient_, convergenceCoefficient, sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(numberOfUsers_, &numberOfUsers, sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(numberOfItems_, &numberOfItems, sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(numberOfFeatures_, &numberOfFeatures, sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(numberOfNonZeroElements_, &numberOfNonZeroElements, sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(convergenceCoefficient_, &convergenceCoefficient, sizeof(double), cudaMemcpyHostToDevice);
 
     cudaMemcpy(A_, A, numberOfUsers * numberOfItems * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(L_, L, numberOfUsers * numberOfFeatures * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(R_, R, numberOfFeatures * numberOfItems * sizeof(double), cudaMemcpyHostToDevice);
-    
-
+    cudaMemcpy(R_, R, numberOfFeatures * numberOfItems * sizeof(double), cudaMemcpyHostToDevice); 
 
     for (int iteration = 0; iteration < numberOfIterations; iteration++) {
         // Parallel to numberOfNonZeroElements blocks, and numberOfFeatures threads.
@@ -97,10 +100,10 @@ void matFact(std::string inputFileName) {
 
     time_t final_filtering = omp_get_wtime();
 
-    delete[] prediction;
-    delete[] delta;
-    delete[] StoreL;
-    delete[] StoreR;
+    delete[] prediction_;
+    delete[] delta_;
+    //delete[] StoreL;
+    //delete[] StoreR;
 
     auto *B = new double[numberOfUsers * numberOfItems];
     auto *BV = new int[numberOfUsers];
@@ -124,7 +127,7 @@ void matFact(std::string inputFileName) {
     total_time = omp_get_wtime();
 
     if (std::getenv("LOG_RESULTS")) {
-        std::ofstream logResults("../compare/comparison.serial.csv", std::ios::app);
+        std::ofstream logResults("../compare/comparison.cuda.csv", std::ios::app);
         logResults << inputFileName << ", ";
         logResults << 1 << ", ";
         std::string outputFileName = inputFileName.substr(0, inputFileName.length() - 2).append("out");

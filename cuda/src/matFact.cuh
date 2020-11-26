@@ -1,5 +1,5 @@
-#ifndef SERIAL_MATFACT_H
-#define SERIAL_MATFACT_H
+#ifndef CUDA_MATFACT_H
+#define CUDA_MATFACT_H
 
 #include <iostream>
 #include <fstream>
@@ -7,4 +7,4 @@
 
 void matFact(std::string inputFileName);
 
-#endif //SERIAL_MATFACT_H
+#endif //CUDA_MATFACT_H
