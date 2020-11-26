@@ -100,10 +100,20 @@ void matFact(std::string inputFileName) {
 
     time_t final_filtering = omp_get_wtime();
 
-    delete[] prediction_;
-    delete[] delta_;
-    //delete[] StoreL;
-    //delete[] StoreR;
+    cudaFree(nonZeroUserIndexes_);
+    cudaFree(nonZeroItemIndexes_);
+    cudaFree(numberOfUsers_);
+    cudaFree(numberOfItems_);
+    cudaFree(numberOfFeatures_);
+    cudaFree(numberOfNonZeroElements_);
+    cudaFree(convergenceCoefficient_);
+
+    cudaFree(A_);
+    cudaFree(L_);
+    cudaFree(R_);
+    cudaFree(prediction_);
+    cudaFree(delta_);
+
 
     auto *B = new double[numberOfUsers * numberOfItems];
     auto *BV = new int[numberOfUsers];
