@@ -4,8 +4,7 @@
 
 - [x] Serial
 - [x] OpenMP
-- [ ] MPI
-- [ ] CUDA
+- [x] CUDA
 
 ## Required Packages
 
@@ -15,20 +14,12 @@
 
 ## How-to
 
-### Serial
+### Cuda
 ```sh
-cd /serial/build
+cd /cuda/build
 cmake ..
 make
-./src/serial ../../instances/inst0.in
-```
-
-### OpenMP
-```sh
-cd /omp/build
-cmake ..
-make
-./src/omp ../../instances/inst0.in
+./src/cuda ../../instances/inst0.in
 ```
 
 ## References
